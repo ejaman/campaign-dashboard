@@ -11,7 +11,7 @@
 - [x] 타입 정의 (`src/types/index.ts`)
 - [x] 상수 정의 (`src/constants/index.ts`)
 - [x] 데이터 정규화 함수 (`src/lib/normalize.ts`)
-- [ ] 파생 지표 계산 함수 (`src/lib/metrics.ts`)
+- [x] 파생 지표 계산 함수 (`src/lib/metrics.ts`)
 
 ### feat/filter — 글로벌 필터
 
