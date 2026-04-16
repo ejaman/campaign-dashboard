@@ -2,6 +2,7 @@ import { Calendar } from 'lucide-react'
 
 interface DateInputProps {
   value: string
+  name: string
   min?: string
   max?: string
   onChange: (value: string) => void
@@ -10,6 +11,7 @@ interface DateInputProps {
 
 export default function DateInput({
   value,
+  name,
   min,
   max,
   onChange,
@@ -27,6 +29,7 @@ export default function DateInput({
       {/* native input — 투명하게 위에 올려 클릭/picker만 담당 */}
       <input
         type="date"
+        name={name}
         value={value}
         min={min}
         max={max}

@@ -12,6 +12,7 @@ export default function DateRangePicker() {
         집행기간
       </span>
       <DateInput
+        name="startDate"
         value={dateRange.start}
         max={dateRange.end}
         onChange={(start) => setDateRange({ ...dateRange, start })}
@@ -19,6 +20,7 @@ export default function DateRangePicker() {
       />
       <span className="text-muted-foreground">~</span>
       <DateInput
+        name="endDate"
         value={dateRange.end}
         min={dateRange.start}
         onChange={(end) => setDateRange({ ...dateRange, end })}
