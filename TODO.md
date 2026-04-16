@@ -4,8 +4,8 @@
 
 ### feat/setup — 프로젝트 초기 설정
 
-- [ ] 패키지 설치 (TanStack Query, Zustand, Recharts, react-hook-form, zod, json-server, lucide-react)
-- [ ] json-server 설정 및 db.json 구성
+- [x] 패키지 설치 (TanStack Query, Zustand, Recharts, react-hook-form, zod, json-server, lucide-react, concurrently)
+- [x] json-server 설정 및 db.json 구성
 - [ ] QueryProvider, providers.tsx 구성
 - [ ] 스타일 초기 설정 (`globals.css` — Tailwind base, 폰트, CSS 변수 등)
 - [ ] 타입 정의 (`src/types/index.ts`)
