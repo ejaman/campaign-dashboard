@@ -113,12 +113,28 @@ ROAS = (conversionsValue / cost) * 100    단위: %
 - `'use client'`는 이벤트 핸들러, useState, useEffect가 있을 때만 사용
 - 비즈니스 로직은 훅으로 분리, 컴포넌트는 렌더링만
 - Props 타입은 컴포넌트 파일 상단에 interface로 선언
+- **컴포넌트 분리 기준**
+  - 같은 UI가 3곳 이상 사용되면 `ui/`로 추출
+  - 독립적인 상태나 책임이 생기면 별도 컴포넌트로 분리
+  - 단일 책임 원칙 — 하나의 컴포넌트가 하나의 역할만 담당
+  - 동일 구조가 데이터만 다르게 반복되면 props로 추상화 (예: `FilterGroup`)
+  - store 연결은 feature 컴포넌트(예: `StatusFilter`)에서 담당, `ui/` 컴포넌트는 props만으로 동작
+  - 부모를 서버 컴포넌트로 유지하기 위해 store를 사용하는 자식은 별도 `'use client'` 컴포넌트로 분리
+- **Props 설계 원칙**
+  - `ui/` 컴포넌트는 도메인 무관한 범용 타입만 받음 (string, number, boolean, 콜백)
+  - 콜백은 이벤트 이름으로 (`onClick`, `onChange`)
+  - 스타일 확장이 필요한 경우 `className` prop 허용
+  - 선택적 props는 기본값 명시
 - **렌더링 성능**: 차트 컴포넌트는 `React.memo`, 무거운 연산은 `useMemo`, 리스트 렌더링 시 `key`는 index 대신 고유 id 사용
 - 불필요한 `useEffect` 금지 — 파생 값은 렌더 중 계산, 이벤트 핸들러로 처리 가능한 것은 effect 쓰지 말 것
 - **UX & 접근성**
   - 모든 인터랙티브 요소에 `aria-label` 등 ARIA 속성 부여
   - 필터·폼의 선택/변경 결과는 즉시 시각적으로 피드백 (로딩 스피너, 비활성화 처리 등)
   - 레이아웃은 모바일~데스크톱 반응형으로 구성 (Tailwind 반응형 접두사 활용)
+  - **반응형 브레이크포인트**: 기본(320px~), `sm`(640px~), `md`(768px~), `lg`(1024px~)
+  - 최소 지원 너비 320px — 이 너비에서도 레이아웃이 깨지지 않아야 함
+  - 좁은 화면에서 보조 텍스트 레이블(`집행기간` 등)은 `hidden sm:inline`으로 숨길 수 있음
+  - 필터 영역 반응형 패턴: `lg` 미만에서는 세로 스택, `md`에서 동일 그룹 항목끼리 가로 배치, `lg` 이상에서 한 줄
 - **네이밍**
   - 컴포넌트 파일: PascalCase (`CampaignTable.tsx`)
   - 훅 파일: camelCase, `use` 접두사 (`useCampaigns.ts`)
