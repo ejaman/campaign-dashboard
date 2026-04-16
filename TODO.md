@@ -10,7 +10,7 @@
 - [x] 스타일 초기 설정 (`globals.css` — Tailwind base, 폰트, CSS 변수 등)
 - [x] 타입 정의 (`src/types/index.ts`)
 - [x] 상수 정의 (`src/constants/index.ts`)
-- [ ] 데이터 정규화 함수 (`src/lib/normalize.ts`)
+- [x] 데이터 정규화 함수 (`src/lib/normalize.ts`)
 - [ ] 파생 지표 계산 함수 (`src/lib/metrics.ts`)
 
 ### feat/filter — 글로벌 필터
