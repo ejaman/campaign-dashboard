@@ -15,7 +15,7 @@
 
 ### feat/filter — 글로벌 필터
 
-- [ ] Zustand filterStore 구성 (기간 / 상태 / 매체)
+- [x] Zustand filterStore 구성 (기간 / 상태 / 매체)
 - [ ] 집행 기간 필터 (초기값: 당월 1일~말일)
 - [ ] 상태 필터 — 진행중 / 일시중지 / 종료 (다중 선택, 초기값: 전체)
 - [ ] 매체 필터 — Google / Meta / Naver (다중 선택, 초기값: 전체)
