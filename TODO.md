@@ -62,6 +62,7 @@
 - [ ] 필터 변경 시 하단 차트·테이블 실시간 동기화 확인(AND 조합)
 - [ ] 집행 기간 클릭 시 날짜 모달이 뜨지 않는 문제 수정
 - [ ] 페이지네이션 첫 페이지, 끝 페이지 도달 시 UI 추가(disabled)
+- [ ] json-server → Next.js API Routes로 대체 (db.json을 app/api/로 서빙, Vercel 단독 배포 가능하게)
 
 ---
 
