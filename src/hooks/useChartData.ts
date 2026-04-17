@@ -9,6 +9,8 @@ export interface DailyChartData {
   date: string // YYYY-MM-DD
   impressions: number
   clicks: number
+  cost: number
+  conversions: number
 }
 
 // Suspense 기반 훅 — 로딩/에러는 Suspense + ErrorBoundary가 처리
@@ -33,7 +35,7 @@ export function useChartData(): DailyChartData[] {
     )
 
     // 날짜 범위 + 캠페인 필터 적용 후 날짜별 집계
-    const aggregated = new Map<string, { impressions: number; clicks: number }>()
+    const aggregated = new Map<string, Omit<DailyChartData, 'date'>>()
 
     for (const stat of dailyStats) {
       if (!filteredCampaignIds.has(stat.campaignId)) continue
@@ -43,10 +45,14 @@ export function useChartData(): DailyChartData[] {
       if (existing) {
         existing.impressions += stat.impressions
         existing.clicks += stat.clicks
+        existing.cost += stat.cost
+        existing.conversions += stat.conversions
       } else {
         aggregated.set(stat.date, {
           impressions: stat.impressions,
           clicks: stat.clicks,
+          cost: stat.cost,
+          conversions: stat.conversions,
         })
       }
     }
