@@ -1,4 +1,4 @@
-import Badge from '@/components/ui/Badge'
+import Badge from './Badge'
 import { formatCurrency, formatPercent, formatDate } from '@/lib/format'
 import type { CampaignRow } from '@/types'
 
