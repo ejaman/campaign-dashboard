@@ -37,25 +37,26 @@ type AggStats = {
   totalConversionsValue: number | null
 }
 
-export function useCampaignTable({
+export const useCampaignTable = ({
   searchQuery,
   sort,
   page,
-}: UseCampaignTableOptions): UseCampaignTableResult {
+}: UseCampaignTableOptions): UseCampaignTableResult => {
   const { data: campaigns } = useCampaignsSuspense()
   const { data: dailyStats } = useDailyStatsSuspense()
   const dateRange = useFilterStore((s) => s.dateRange)
   const platforms = useFilterStore((s) => s.platforms)
   const statuses = useFilterStore((s) => s.statuses)
 
-  return useMemo(() => {
+  // Step 1~3: 글로벌 필터 + 날짜 범위 집계 + CampaignRow 생성
+  // searchQuery·sort·page 변경 시 재실행되지 않음
+  const { aggRows, totalCount } = useMemo(() => {
     // 1. 글로벌 필터 (플랫폼, 상태) 적용
     const filteredCampaigns = campaigns.filter((c) => {
       const platformMatch = platforms.length === 0 || platforms.includes(c.platform)
       const statusMatch = statuses.length === 0 || statuses.includes(c.status)
       return platformMatch && statusMatch
     })
-    const totalCount = filteredCampaigns.length
 
     // 2. 날짜 범위 내 stats 캠페인별 집계
     const statsMap = new Map<string, AggStats>()
@@ -85,7 +86,7 @@ export function useCampaignTable({
     }
 
     // 3. CampaignRow 생성
-    const allRows: CampaignRow[] = filteredCampaigns.map((c) => {
+    const rows: CampaignRow[] = filteredCampaigns.map((c) => {
       const agg = statsMap.get(c.id) ?? {
         totalImpressions: 0,
         totalClicks: 0,
@@ -107,16 +108,19 @@ export function useCampaignTable({
       }
     })
 
-    // 4. 검색 필터링
-    const trimmed = searchQuery.trim().toLowerCase()
-    const searched = trimmed
-      ? allRows.filter((row) => row.name.toLowerCase().includes(trimmed))
-      : allRows
-    const filteredCount = searched.length
+    return { aggRows: rows, totalCount: filteredCampaigns.length }
+  }, [campaigns, dailyStats, dateRange, platforms, statuses])
 
-    // 5. 정렬 (null은 항상 마지막)
+  // Step 4: 검색 필터링 — sort·page 변경 시 재실행되지 않음
+  const searchedRows = useMemo(() => {
+    const trimmed = searchQuery.trim().toLowerCase()
+    return trimmed ? aggRows.filter((row) => row.name.toLowerCase().includes(trimmed)) : aggRows
+  }, [aggRows, searchQuery])
+
+  // Step 5~6: 정렬 + 페이지네이션
+  const { rows, filteredCount, pageCount } = useMemo(() => {
     const sorted = sort
-      ? [...searched].sort((a, b) => {
+      ? [...searchedRows].sort((a, b) => {
           const dir = sort.direction === 'asc' ? 1 : -1
           const col = sort.column
 
@@ -130,14 +134,19 @@ export function useCampaignTable({
           if (aVal > bVal) return 1 * dir
           return 0
         })
-      : searched
+      : searchedRows
 
-    // 6. 페이지네이션
-    const pageCount = Math.max(1, Math.ceil(filteredCount / PAGE_SIZE))
-    const clampedPage = Math.min(Math.max(1, page), pageCount)
+    const count = searchedRows.length
+    const pages = Math.max(1, Math.ceil(count / PAGE_SIZE))
+    const clampedPage = Math.min(Math.max(1, page), pages)
     const start = (clampedPage - 1) * PAGE_SIZE
-    const rows = sorted.slice(start, start + PAGE_SIZE)
 
-    return { rows, totalCount, filteredCount, pageCount }
-  }, [campaigns, dailyStats, dateRange, platforms, statuses, searchQuery, sort, page])
+    return {
+      rows: sorted.slice(start, start + PAGE_SIZE),
+      filteredCount: count,
+      pageCount: pages,
+    }
+  }, [searchedRows, sort, page])
+
+  return { rows, totalCount, filteredCount, pageCount }
 }
