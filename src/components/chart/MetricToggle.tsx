@@ -1,6 +1,5 @@
 import Button from '@/components/ui/Button'
-import { METRIC_LABELS } from '@/constants'
-import type { ChartMetric } from '@/types'
+import { CHART_METRICS, type ChartMetric } from '@/constants'
 
 const DEFAULT_OPTIONS: ChartMetric[] = ['impressions', 'clicks']
 
@@ -17,7 +16,6 @@ export default function MetricToggle({
 }: MetricToggleProps) {
   function handleToggle(metric: ChartMetric) {
     const isActive = activeMetrics.includes(metric)
-    // 마지막 1개 선택 시 비활성화 방지
     if (isActive && activeMetrics.length === 1) return
 
     const next = isActive ? activeMetrics.filter((m) => m !== metric) : [...activeMetrics, metric]
@@ -26,21 +24,22 @@ export default function MetricToggle({
 
   return (
     <div className="flex gap-2" role="group" aria-label="지표 선택">
-      {options.map((metric) => {
-        const isActive = activeMetrics.includes(metric)
+      {options.map((key) => {
+        const metric = CHART_METRICS.find((m) => m.key === key)!
+        const isActive = activeMetrics.includes(key)
         const isDisabled = isActive && activeMetrics.length === 1
         return (
-          <span key={metric} className="relative group">
+          <span key={key} className="relative group">
             <Button
               variant="default"
               size="sm"
               active={isActive}
               disabled={isDisabled}
               aria-pressed={isActive}
-              aria-label={`${METRIC_LABELS[metric]} ${isActive ? '선택됨' : '선택 안됨'}`}
-              onClick={() => handleToggle(metric)}
+              aria-label={`${metric.label} ${isActive ? '선택됨' : '선택 안됨'}`}
+              onClick={() => handleToggle(key)}
             >
-              {METRIC_LABELS[metric]}
+              {metric.label}
             </Button>
             {isDisabled && (
               <span

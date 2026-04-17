@@ -1,4 +1,4 @@
-import type { ChartMetric, Platform, Status } from '@/types'
+import type { Platform, Status } from '@/types'
 
 // API
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
@@ -17,17 +17,13 @@ export const STATUS_LABEL: Record<Status, string> = {
 // 테이블
 export const PAGE_SIZE = 10
 
-// 차트 메트릭
-export const METRIC_LABELS: Record<ChartMetric, string> = {
-  impressions: '노출수',
-  clicks: '클릭수',
-  cost: '비용',
-  conversions: '전환수',
-}
+// 차트 메트릭 — 단일 배열에서 타입·레이블·색상을 모두 관리
+// 새 지표 추가 시 이 배열에만 항목을 추가하면 됨
+export const CHART_METRICS = [
+  { key: 'impressions', label: '노출수', color: '#0081cf' },
+  { key: 'clicks', label: '클릭수', color: '#008f7a' },
+  { key: 'cost', label: '비용', color: '#776cc9' },
+  { key: 'conversions', label: '전환수', color: '#897456' },
+] as const
 
-export const METRIC_COLORS: Record<ChartMetric, string> = {
-  impressions: '#0081cf',
-  clicks: '#008f7a',
-  cost: '#776cc9',
-  conversions: '#897456',
-}
+export type ChartMetric = (typeof CHART_METRICS)[number]['key']
