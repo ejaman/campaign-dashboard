@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import GlobalFilter from '@/components/filter/GlobalFilter'
 import DailyChartSection from '@/components/chart/DailyChartSection'
 import CampaignTableSection from '@/components/table/CampaignTableSection'
