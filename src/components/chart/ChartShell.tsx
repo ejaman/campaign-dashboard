@@ -1,28 +1,14 @@
 'use client'
 
-import { Suspense, type ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import { useFilterStore } from '@/store/filter-store'
-import ErrorBoundary from './ErrorBoundary'
+import AsyncBoundary from '../shared/AsyncBoundary'
+import { formatDate } from '@/lib/format'
 
 interface ChartShellProps {
   title: string
   header?: ReactNode
   children: ReactNode
-}
-
-function LoadingFallback() {
-  return (
-    <div className="flex h-[300px] items-center justify-center">
-      <p className="text-sm text-muted-foreground" aria-live="polite">
-        데이터를 불러오는 중...
-      </p>
-    </div>
-  )
-}
-
-function formatDate(dateStr: string): string {
-  // YYYY-MM-DD → YYYY.MM.DD
-  return dateStr.replace(/-/g, '.')
 }
 
 export default function ChartShell({ title, header, children }: ChartShellProps) {
@@ -40,13 +26,7 @@ export default function ChartShell({ title, header, children }: ChartShellProps)
         {header}
       </div>
 
-      <ErrorBoundary>
-        <Suspense fallback={<LoadingFallback />}>
-          <div className="overflow-x-auto">
-            <div className="min-w-120">{children}</div>
-          </div>
-        </Suspense>
-      </ErrorBoundary>
+      <AsyncBoundary>{children}</AsyncBoundary>
     </section>
   )
 }

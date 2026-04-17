@@ -121,7 +121,21 @@ export type ChartMetric = (typeof CHART_METRICS)[number]['key']
 
 ### feat/table
 
-- (추후 작성)
+**활용 방식**
+
+- 캠페인 목록 테이블 전체(훅, 컴포넌트 분리, 정렬·검색·페이지네이션·체크박스·일괄 상태 변경)를 설계·구현하도록 요청했다.
+- `SearchInput` UI 컴포넌트, `useBulkStatusUpdate` 훅, `useCampaignRegisterModal` Zustand 훅 등 재사용 가능한 단위를 개별 요청으로 추출했다.
+
+**직접 수정한 판단**
+
+- **컴포넌트 뎁스 조정**: AI가 `CampaignTableContainer` 중간 레이어를 추가했으나, "너무 뎁스가 깊다"고 판단해 삭제를 직접 지시. `CampaignTableMeta` + `CampaignTableContent`를 `AsyncBoundary` 안에 형제로 배치하는 구조로 변경 — TanStack Query 캐시 덕분에 두 컴포넌트가 동일 쿼리를 각각 호출해도 네트워크 중복 없음을 확인 후 결정
+- **검색 방식 3회 수정**: 실시간 → 버튼 클릭 → 실시간 순으로 변경. 최종적으로 `useTransition`을 적용해 입력 반응성은 유지하면서 테이블 업데이트를 낮은 우선순위로 처리하는 방식 채택 — AI 결과물을 그대로 수용하지 않고 UX 관점에서 반복 검토
+- **컬럼 고정 너비**: 검색 결과 변화에 따라 테이블 레이아웃이 흔들리는 문제를 직접 발견. `table-fixed` + 퍼센트 너비 방식으로 수정하도록 직접 지시 (AI 초안에는 없던 개선)
+- **`shared/` 레이어 도입**: `AsyncBoundary`를 `shared/` 디렉토리로 분리하는 구조를 직접 제안. 단일 feature에서만 쓰이는 컴포넌트를 `shared/`에 넣는 게 맞는지 AI에게 되묻고, "여러 feature에서 재사용되는 UI 조립 틀"로 기준을 직접 정의해 CLAUDE.md에 반영
+
+**useEffect 대신 렌더 중 비교 패턴**
+
+- 글로벌 필터 변경 시 페이지·선택 초기화에 `useEffect` + `setState`를 사용했더니 ESLint가 cascading render 경고를 발생시켰다. AI가 `prevFilterKey` 상태 비교를 렌더 중에 수행하는 React 권장 패턴(getDerivedState 유사)으로 수정했고, 이 방식이 effect보다 re-render 횟수가 적다는 원리를 직접 확인 후 채택했다.
 
 ### feat/campaign-modal
 
