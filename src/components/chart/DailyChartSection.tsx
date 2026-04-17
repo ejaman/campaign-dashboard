@@ -4,7 +4,7 @@ import { useState } from 'react'
 import ChartShell from '@/components/ui/ChartShell'
 import MetricToggle from './MetricToggle'
 import DailyChartContent from './DailyChartContent'
-import type { ChartMetric } from '@/types'
+import type { ChartMetric } from '@/constants'
 
 export default function DailyChartSection() {
   const [activeMetrics, setActiveMetrics] = useState<ChartMetric[]>(['impressions', 'clicks'])

@@ -1,6 +1,6 @@
 'use client'
 
-import { memo } from 'react'
+import { memo, useMemo } from 'react'
 import {
   LineChart,
   Line,
@@ -11,10 +11,9 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts'
-import { METRIC_COLORS, METRIC_LABELS } from '@/constants'
+import { CHART_METRICS, type ChartMetric } from '@/constants'
 import { formatChartDate, formatNumber } from '@/lib/format'
 import type { DailyChartData } from '@/hooks/useChartData'
-import type { ChartMetric } from '@/types'
 
 interface CustomTooltipProps {
   active?: boolean
@@ -43,10 +42,10 @@ interface DailyChartProps {
 }
 
 function DailyChart({ data, activeMetrics }: DailyChartProps) {
-  const chartData = data.map((d) => ({
-    ...d,
-    date: formatChartDate(d.date),
-  }))
+  const chartData = useMemo(
+    () => data.map((d) => ({ ...d, date: formatChartDate(d.date) })),
+    [data]
+  )
 
   return (
     <ResponsiveContainer width="100%" height={300}>
@@ -67,29 +66,21 @@ function DailyChart({ data, activeMetrics }: DailyChartProps) {
         />
         <Tooltip content={<CustomTooltip />} />
         <Legend formatter={(value) => <span className="text-sm text-foreground">{value}</span>} />
-        {activeMetrics.includes('impressions') && (
-          <Line
-            type="monotone"
-            dataKey="impressions"
-            name={METRIC_LABELS.impressions}
-            stroke={METRIC_COLORS.impressions}
-            strokeWidth={2}
-            dot={false}
-            activeDot={{ r: 4 }}
-            animationDuration={700}
-          />
-        )}
-        {activeMetrics.includes('clicks') && (
-          <Line
-            type="monotone"
-            dataKey="clicks"
-            name={METRIC_LABELS.clicks}
-            stroke={METRIC_COLORS.clicks}
-            strokeWidth={2}
-            dot={false}
-            activeDot={{ r: 4 }}
-            animationDuration={700}
-          />
+        {CHART_METRICS.filter((m) => ['impressions', 'clicks'].includes(m.key)).map(
+          ({ key, label, color }) => (
+            <Line
+              key={key}
+              type="monotone"
+              dataKey={key}
+              name={label}
+              stroke={color}
+              strokeWidth={2}
+              dot={false}
+              activeDot={{ r: 4 }}
+              animationDuration={700}
+              hide={!activeMetrics.includes(key)}
+            />
+          )
         )}
       </LineChart>
     </ResponsiveContainer>

@@ -2,7 +2,7 @@
 
 import { useChartData } from '@/hooks/useChartData'
 import DailyChart from './DailyChart'
-import type { ChartMetric } from '@/types'
+import type { ChartMetric } from '@/constants'
 
 interface DailyChartContentProps {
   activeMetrics: ChartMetric[]
