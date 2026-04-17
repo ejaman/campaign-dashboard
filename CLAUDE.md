@@ -43,6 +43,7 @@ src/
 │
 ├── components/
 │   ├── ui/                 # 도메인 없는 원자 컴포넌트 (Button, Badge, Modal 등)
+│   ├── shared/             # UI 조립 틀 (AsyncBoundary, SectionShell 등)
 │   ├── filter/             # 필터 기능 컴포넌트
 │   ├── chart/              # 차트 컴포넌트
 │   ├── table/              # 테이블 컴포넌트
@@ -55,7 +56,16 @@ src/
 └── constants/              # 상수 정의
 ```
 
-- `ui/` 컴포넌트는 도메인 의존성 없이 Props만으로 동작해야 함
+### 컴포넌트 계층 위계
+
+| 계층 | 폴더                                    | 역할                                                            | 예시                              |
+| ---- | --------------------------------------- | --------------------------------------------------------------- | --------------------------------- |
+| 원자 | `ui/`                                   | 도메인·레이아웃 무관, Props만으로 동작                          | Button, Badge, Modal, SearchInput |
+| 구조 | `shared/`                               | `ui/`를 조합한 UI 틀, 여러 feature에서 재사용되는 레이아웃 패턴 | AsyncBoundary, ChartShell         |
+| 기능 | `filter/` `chart/` `table/` `campaign/` | 도메인 로직 포함, store 연결 허용                               | GlobalFilter, DailyChartSection   |
+
+- `ui/` → `shared/` → feature 순으로 의존. 역방향 import 금지
+- `shared/` 컴포넌트는 특정 도메인 store에 직접 의존하지 않는 것을 원칙으로 함
 - 기능별 컴포넌트(`filter/`, `chart/` 등)는 해당 도메인에 특화된 로직만 포함
 
 ---
@@ -95,6 +105,7 @@ ROAS = (conversionsValue / cost) * 100    단위: %
 - TypeScript strict 모드 위반 없이 모든 타입 에러를 해결할 것
 - `console.log` 코드에 남기지 말 것
 - 매직 넘버는 `src/constants/`에 상수로 정의
+- 함수 작성 시 화살표 함수를 우선으로 작성할 것
 - **에러 핸들링**: API 호출 실패 시 사용자에게 에러 상태를 명시적으로 표시할 것 (빈 화면 금지)
 - **로딩 상태**: 데이터 fetching 중에는 반드시 로딩 UI를 표시할 것
 
@@ -115,10 +126,11 @@ ROAS = (conversionsValue / cost) * 100    단위: %
 - Props 타입은 컴포넌트 파일 상단에 interface로 선언
 - **컴포넌트 분리 기준**
   - 같은 UI가 3곳 이상 사용되면 `ui/`로 추출
+  - `ui/` 컴포넌트를 조합해 레이아웃 패턴을 만들고 여러 feature에서 쓰이면 `shared/`로 추출 (예: `AsyncBoundary`, `ChartShell`)
   - 독립적인 상태나 책임이 생기면 별도 컴포넌트로 분리
   - 단일 책임 원칙 — 하나의 컴포넌트가 하나의 역할만 담당
   - 동일 구조가 데이터만 다르게 반복되면 props로 추상화 (예: `FilterGroup`)
-  - store 연결은 feature 컴포넌트(예: `StatusFilter`)에서 담당, `ui/` 컴포넌트는 props만으로 동작
+  - store 연결은 feature 컴포넌트(예: `StatusFilter`)에서 담당, `ui/`·`shared/` 컴포넌트는 props만으로 동작
   - 부모를 서버 컴포넌트로 유지하기 위해 store를 사용하는 자식은 별도 `'use client'` 컴포넌트로 분리
 - **Props 설계 원칙**
   - `ui/` 컴포넌트는 도메인 무관한 범용 타입만 받음 (string, number, boolean, 콜백)

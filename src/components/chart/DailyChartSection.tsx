@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import ChartShell from '@/components/ui/ChartShell'
+import ChartShell from './ChartShell'
 import MetricToggle from './MetricToggle'
 import DailyChartContent from './DailyChartContent'
 import type { ChartMetric } from '@/types'
