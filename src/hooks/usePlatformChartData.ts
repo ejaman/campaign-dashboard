@@ -22,13 +22,12 @@ export function usePlatformChartData(activeMetric: ChartMetric): PlatformChartDa
   const { dateRange, statuses } = useFilterParams()
 
   return useMemo(() => {
-    const filteredIds = new Set(
-      campaigns.filter((c) => statuses.length === 0 || statuses.includes(c.status)).map((c) => c.id)
-    )
-
-    const campaignPlatform = new Map<string, Platform>(
-      campaigns.filter((c) => filteredIds.has(c.id)).map((c) => [c.id, c.platform])
-    )
+    const campaignPlatform = new Map<string, Platform>()
+    campaigns.forEach((c) => {
+      if (statuses.length === 0 || statuses.includes(c.status)) {
+        campaignPlatform.set(c.id, c.platform)
+      }
+    })
 
     const totals = new Map<Platform, number>(PLATFORMS.map((p) => [p, 0]))
 

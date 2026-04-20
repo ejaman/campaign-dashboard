@@ -79,6 +79,7 @@ function PlatformChart({
         {data.map(({ platform, value, percentage, color }) => (
           <li
             key={platform}
+            role="button"
             className="flex items-center justify-between cursor-pointer"
             onClick={() => onSegmentClick(platform)}
           >
