@@ -32,3 +32,15 @@ export const CHART_METRICS = [
 ] as const
 
 export type ChartMetric = (typeof CHART_METRICS)[number]['key']
+
+// 랭킹 차트 메트릭
+export const RANKING_METRICS = [
+  { key: 'ctr', label: 'CTR' },
+  { key: 'cpc', label: 'CPC' },
+  { key: 'roas', label: 'ROAS' },
+] as const
+
+export type RankingMetric = (typeof RANKING_METRICS)[number]['key']
+
+// CPC는 낮을수록 좋음 (오름차순 정렬)
+export const RANKING_ASCENDING: RankingMetric[] = ['cpc']
