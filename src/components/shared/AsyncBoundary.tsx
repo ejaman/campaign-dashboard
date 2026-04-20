@@ -9,9 +9,7 @@ interface AsyncBoundaryProps {
 export default function AsyncBoundary({ fallback, children }: AsyncBoundaryProps) {
   return (
     <ErrorBoundary>
-      <Suspense fallback={fallback || <LoadingFallback />}>
-        <div className="h-full">{children}</div>
-      </Suspense>
+      <Suspense fallback={fallback || <LoadingFallback />}>{children}</Suspense>
     </ErrorBoundary>
   )
 }
