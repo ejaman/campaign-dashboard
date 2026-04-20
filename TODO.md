@@ -78,9 +78,9 @@
 
 ### feat/chart-ranking — 캠페인 랭킹 Top3 (Bar)
 
-- [ ] 메트릭 토글: ROAS / CTR / CPC (기본값: ROAS)
-- [ ] 선택 메트릭 기준 상위 3개 캠페인 표시
-- [ ] ⭐ 정렬 기준: ROAS·CTR은 높을수록 ↑, CPC는 낮을수록 ↓
+- [x] 메트릭 토글: ROAS / CTR / CPC (기본값: ROAS)
+- [x] 선택 메트릭 기준 상위 3개 캠페인 표시
+- [x] ⭐ 정렬 기준: ROAS·CTR은 높을수록 ↑, CPC는 낮을수록 ↓
 
 ---
 
