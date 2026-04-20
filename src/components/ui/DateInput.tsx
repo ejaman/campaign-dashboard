@@ -50,7 +50,6 @@ export default function DateInput({
         onChange={(e) => onChange(e.target.value)}
         className="opacity-0 absolute inset-0 w-full h-full cursor-pointer"
         aria-label={ariaLabel}
-        tabIndex={-1}
       />
       <Calendar
         size={14}
