@@ -29,9 +29,10 @@ export default function CampaignRegisterModal() {
     formState: { errors, isValid },
   } = useForm<CampaignRegisterFormValues>({
     resolver: zodResolver(campaignRegisterSchema),
-    mode: 'onChange',
+    mode: 'onChange', // 입력할 때마다 실시간 검사
     defaultValues: {
-      platform: '',
+      // controlled -> uncontrolled 방지
+      platform: '' as Platform,
     },
   })
 
