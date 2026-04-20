@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Next Template',
-  description: 'Next.js 16 starter template',
+  title: 'Campaign Dashboard',
+  description: 'Campaign dashboard assignment',
 }
 
 export default function RootLayout({

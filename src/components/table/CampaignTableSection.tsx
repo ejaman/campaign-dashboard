@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
-import { useFilterStore } from '@/store/filter-store'
+import { useMemo, useState, useTransition } from 'react'
 import { useCampaignRegisterModal } from '@/hooks/useCampaignRegisterModal'
 import Button from '@/components/ui/Button'
 import SearchInput from '@/components/ui/SearchInput'
@@ -9,6 +8,8 @@ import CampaignTableMeta from './CampaignTableMeta'
 import CampaignTableContent from './CampaignTableContent'
 import type { SortState } from '@/hooks/useCampaignTable'
 import AsyncBoundary from '../shared/AsyncBoundary'
+import FilterSummary from '../filter/FilterSummary'
+import { useFilterParams } from '@/hooks/useFilterParams'
 
 export default function CampaignTableSection() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -18,13 +19,16 @@ export default function CampaignTableSection() {
   const [isPending, startTransition] = useTransition()
   const { open: openRegisterModal } = useCampaignRegisterModal()
 
-  // TODO:설명이 필요함
-  // 글로벌 필터 변경 감지 — 렌더 중 비교로 페이지·선택 초기화
-  // useEffect 대신 React 권장 패턴(getDerivedState) 사용: effect 내 setState는 cascading render 유발
-  const filterKey = useFilterStore(
-    (s) =>
-      `${s.dateRange.start}|${s.dateRange.end}|${[...s.platforms].join()}|${[...s.statuses].join()}`
-  )
+  const {
+    dateRange: { start, end },
+    statuses,
+    platforms,
+  } = useFilterParams()
+
+  const filterKey = useMemo(() => {
+    return `${start}|${end}|${[...platforms].join()}|${[...statuses].join()}`
+  }, [end, platforms, start, statuses])
+
   const [prevFilterKey, setPrevFilterKey] = useState(filterKey)
   if (prevFilterKey !== filterKey) {
     setPrevFilterKey(filterKey)
@@ -43,7 +47,10 @@ export default function CampaignTableSection() {
     <section className="rounded-xl border border-border bg-white p-4 sm:p-6">
       {/* 섹션 헤더: 제목 + 검색 + 등록 버튼 */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
-        <h2 className="text-base font-semibold text-foreground">캠페인 목록</h2>
+        <div>
+          <h2 className="text-base font-semibold text-foreground">캠페인 목록</h2>
+          <FilterSummary />
+        </div>
         <div className="flex items-center gap-2">
           <SearchInput
             onSearch={handleSearch}

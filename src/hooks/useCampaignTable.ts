@@ -3,10 +3,10 @@
 import { useMemo } from 'react'
 import { useCampaignsSuspense } from '@/hooks/useCampaigns'
 import { useDailyStatsSuspense } from '@/hooks/useDailyStats'
-import { useFilterStore } from '@/store/filter-store'
 import { calcCTR, calcCPC, calcROAS } from '@/lib/metrics'
 import { PAGE_SIZE } from '@/constants'
 import type { CampaignRow } from '@/types'
+import { useFilterParams } from './useFilterParams'
 
 export type SortColumn = 'startDate' | 'totalCost' | 'ctr' | 'cpc' | 'roas'
 export type SortDirection = 'asc' | 'desc'
@@ -44,9 +44,7 @@ export const useCampaignTable = ({
 }: UseCampaignTableOptions): UseCampaignTableResult => {
   const { data: campaigns } = useCampaignsSuspense()
   const { data: dailyStats } = useDailyStatsSuspense()
-  const dateRange = useFilterStore((s) => s.dateRange)
-  const platforms = useFilterStore((s) => s.platforms)
-  const statuses = useFilterStore((s) => s.statuses)
+  const { dateRange, platforms, statuses } = useFilterParams()
 
   // Step 1~3: 글로벌 필터 + 날짜 범위 집계 + CampaignRow 생성
   // searchQuery·sort·page 변경 시 재실행되지 않음

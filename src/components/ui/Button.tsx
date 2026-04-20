@@ -39,6 +39,7 @@ export default function Button({
 }: ButtonProps) {
   const classes = [
     'inline-flex items-center justify-center transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg break-keep disabled:opacity-50 disabled:cursor-not-allowed',
+
     sizeClasses[size],
     getVariantClasses(variant, active),
     className,
