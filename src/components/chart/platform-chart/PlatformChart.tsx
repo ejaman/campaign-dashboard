@@ -80,8 +80,17 @@ function PlatformChart({
           <li
             key={platform}
             role="button"
+            tabIndex={0}
             className="flex items-center justify-between cursor-pointer"
             onClick={() => onSegmentClick(platform)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                onSegmentClick(platform)
+              }
+            }}
+            aria-label={`${platform} 필터 토글`}
+            aria-pressed={activePlatforms.includes(platform)}
           >
             <span className="flex items-center gap-2">
               <span
