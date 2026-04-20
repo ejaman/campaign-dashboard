@@ -62,7 +62,7 @@ export default function CampaignTableContent({
   return (
     <>
       <div className="overflow-x-auto min-h-122.5">
-        <table className="w-full table-fixed text-sm">
+        <table className="w-full min-w-[860px] table-fixed text-sm">
           <CampaignTableHead
             sort={sort}
             allSelected={allSelected}
