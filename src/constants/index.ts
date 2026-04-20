@@ -1,6 +1,13 @@
 import type { Platform, Status } from '@/types'
 
 // API
+// 플랫폼 색상
+export const PLATFORM_COLORS: Record<string, string> = {
+  Google: '#4285F4',
+  Meta: '#E91E8C',
+  Naver: '#03C75A',
+}
+
 // 필터 옵션
 export const PLATFORMS: Platform[] = ['Google', 'Meta', 'Naver']
 
