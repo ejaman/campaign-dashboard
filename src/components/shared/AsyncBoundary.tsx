@@ -10,9 +10,7 @@ export default function AsyncBoundary({ fallback, children }: AsyncBoundaryProps
   return (
     <ErrorBoundary>
       <Suspense fallback={fallback || <LoadingFallback />}>
-        <div className="overflow-x-auto">
-          <div className="min-w-120">{children}</div>
-        </div>
+        <div className="h-full">{children}</div>
       </Suspense>
     </ErrorBoundary>
   )
