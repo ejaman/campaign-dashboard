@@ -2,14 +2,14 @@
 
 import { RotateCcw } from 'lucide-react'
 import Button from '@/components/ui/Button'
-import { useFilterStore } from '@/store/filter-store'
+import { useFilterParams } from '@/hooks/useFilterParams'
 
 interface ResetButtonProps {
   className?: string
 }
 
 export default function ResetButton({ className = '' }: ResetButtonProps) {
-  const reset = useFilterStore((state) => state.reset)
+  const { reset } = useFilterParams()
 
   return (
     <Button

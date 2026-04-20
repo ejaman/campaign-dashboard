@@ -1,13 +1,15 @@
 'use client'
 
-import { useFilterStore } from '@/store/filter-store'
 import { formatDate } from '@/lib/format'
 import { STATUS_LABEL } from '@/constants'
+import { useFilterParams } from '@/hooks/useFilterParams'
 
 export default function FilterSummary() {
-  const { start, end } = useFilterStore((s) => s.dateRange)
-  const platforms = useFilterStore((s) => s.platforms)
-  const statuses = useFilterStore((s) => s.statuses)
+  const {
+    dateRange: { start, end },
+    platforms,
+    statuses,
+  } = useFilterParams()
 
   const parts = [
     `${formatDate(start)} ~ ${formatDate(end)}`,

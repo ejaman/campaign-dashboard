@@ -1,10 +1,10 @@
 'use client'
 
 import DateInput from '@/components/ui/DateInput'
-import { useFilterStore } from '@/store/filter-store'
+import { useFilterParams } from '@/hooks/useFilterParams'
 
 export default function DateRangePicker() {
-  const { dateRange, setDateRange } = useFilterStore()
+  const { dateRange, setDateRange } = useFilterParams()
 
   return (
     <div className="flex items-center gap-2">

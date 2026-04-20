@@ -3,7 +3,7 @@
 import { useMemo } from 'react'
 import { useCampaignsSuspense } from '@/hooks/useCampaigns'
 import { useDailyStatsSuspense } from '@/hooks/useDailyStats'
-import { useFilterStore } from '@/store/filter-store'
+import { useFilterParams } from './useFilterParams'
 
 export interface DailyChartData {
   date: string // YYYY-MM-DD
@@ -17,10 +17,7 @@ export interface DailyChartData {
 export function useChartData(): DailyChartData[] {
   const { data: campaigns } = useCampaignsSuspense()
   const { data: dailyStats } = useDailyStatsSuspense()
-
-  const dateRange = useFilterStore((s) => s.dateRange)
-  const platforms = useFilterStore((s) => s.platforms)
-  const statuses = useFilterStore((s) => s.statuses)
+  const { dateRange, platforms, statuses } = useFilterParams()
 
   return useMemo<DailyChartData[]>(() => {
     // 필터 조건에 맞는 campaignId 집합
@@ -61,5 +58,5 @@ export function useChartData(): DailyChartData[] {
     return Array.from(aggregated.entries())
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([date, values]) => ({ date, ...values }))
-  }, [campaigns, dailyStats, dateRange, platforms, statuses])
+  }, [campaigns, dailyStats, dateRange.end, dateRange.start, platforms, statuses])
 }
