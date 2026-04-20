@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Search, Loader2 } from 'lucide-react'
+import { Search, Loader2, X } from 'lucide-react'
 
 interface SearchInputProps {
   onSearch?: (value: string) => void
@@ -24,6 +24,11 @@ export default function SearchInput({
     if (e.key === 'Enter') onSearch?.(value)
   }
 
+  function handleClear() {
+    setValue('')
+    onSearch?.('')
+  }
+
   return (
     <div className="relative flex items-center">
       <input
@@ -38,15 +43,26 @@ export default function SearchInput({
         aria-label={ariaLabel}
         className={`w-full rounded-lg border border-border py-1.5 pl-3 pr-8 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring ${className}`}
       />
-      <button
-        type="button"
-        onClick={() => onSearch?.(value)}
-        className="absolute right-2 text-muted-foreground hover:text-foreground transition-colors"
-        aria-label="검색"
-        tabIndex={-1}
-      >
-        {isPending ? <Loader2 size={14} className="animate-spin" /> : <Search size={14} />}
-      </button>
+      {value ? (
+        <button
+          type="button"
+          onClick={handleClear}
+          className="absolute right-2 text-muted-foreground hover:text-foreground transition-colors"
+          aria-label="검색어 초기화"
+        >
+          <X size={14} />
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={() => onSearch?.(value)}
+          className="absolute right-2 text-muted-foreground hover:text-foreground transition-colors"
+          aria-label="검색"
+          tabIndex={-1}
+        >
+          {isPending ? <Loader2 size={14} className="animate-spin" /> : <Search size={14} />}
+        </button>
+      )}
     </div>
   )
 }
