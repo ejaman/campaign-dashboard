@@ -139,7 +139,20 @@ export type ChartMetric = (typeof CHART_METRICS)[number]['key']
 
 ### feat/campaign-modal
 
-- (추후 작성)
+**활용 방식**
+
+- 캠페인 등록 모달 전체(Modal 컴파운드 컴포넌트, react-hook-form + Zod 유효성 검증, queryClient.setQueryData로 캐시 직접 추가)를 설계·구현하도록 요청했다.
+
+**직접 수정한 판단**
+
+- **컴파운드 컴포넌트 패턴 요구**: AI 초안이 단순 prop-drilling 방식이었으나, CLAUDE.md에 선언한 컴파운드 컴포넌트 패턴(`Modal.Header` / `Modal.Content` / `Modal.Footer`)으로 재작성하도록 직접 지시
+- **Zod v4 타입 오류 수정**: `z.coerce.number()`를 사용하면 react-hook-form resolver에서 `budget: unknown` 타입 오류가 발생. AI가 원인을 `z.number()` + `valueAsNumber: true` 조합으로 분석하고 수정 — Zod v4의 `coerce`가 타입을 `unknown`으로 추론하는 구조적 문제를 이 과정에서 파악
+- **`watch()` → `useWatch()` 교체**: React Compiler가 `watch()`의 반환 함수를 메모이제이션할 수 없다고 경고. `useWatch({ control, name })` 방식으로 교체하도록 직접 지시 — 코드 실행 결과를 보고 직접 발견한 문제
+- **FormItem 아키텍처 제안**: AI가 `FormField` / `FormSelect` / `FormDateField` 개별 wrapper를 만들었으나, 폼 필드가 늘어날수록 wrapper도 늘어나는 구조적 비효율을 직접 지적. label+error+suffix를 하나의 `FormItem`이 담당하고 `React.cloneElement`로 자식 input에 `id`를 주입하는 방식으로 재설계하도록 제안했다. 이를 통해 `Input`, `Select`, `DateInput` 각각을 도메인 무관한 독립 컴포넌트로 유지하면서 label-input 접근성 연결을 `FormItem`이 일관되게 처리
+
+**CLAUDE.md 규칙 추가**
+
+- AI가 작성한 코드에서 나온 접근성 오류(`htmlFor` 미연결, `aria-label` 중복)와 설계 결정(Controller 패턴, defaultValues 위치) 등을 AI_USAGE 작성과 병행해 CLAUDE.md에 즉시 반영 — 이후 세션에서 동일 실수 반복 방지
 
 ---
 
