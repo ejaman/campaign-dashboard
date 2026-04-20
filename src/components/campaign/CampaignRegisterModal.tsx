@@ -13,7 +13,7 @@ import { useCampaignRegisterModal } from '@/hooks/useCampaignRegisterModal'
 import { campaignRegisterSchema, type CampaignRegisterFormValues } from '@/lib/campaign-schema'
 import { queryKeys } from '@/lib/query-keys'
 import { PLATFORMS } from '@/constants'
-import type { Campaign, DailyStat, Platform } from '@/types'
+import type { Campaign, Platform } from '@/types'
 
 const PLATFORM_OPTIONS = PLATFORMS.map((p) => ({ value: p, label: p }))
 
@@ -31,7 +31,7 @@ export default function CampaignRegisterModal() {
     resolver: zodResolver(campaignRegisterSchema),
     mode: 'onChange',
     defaultValues: {
-      platform: '' as Platform,
+      platform: '',
     },
   })
 
@@ -58,20 +58,6 @@ export default function CampaignRegisterModal() {
     queryClient.setQueryData<Campaign[]>(queryKeys.campaigns.all, (prev = []) => [
       ...prev,
       newCampaign,
-    ])
-
-    queryClient.setQueryData<DailyStat[]>(queryKeys.dailyStats.all, (prev = []) => [
-      ...prev,
-      {
-        id: crypto.randomUUID(),
-        campaignId,
-        date: data.startDate,
-        impressions: 0,
-        clicks: 0,
-        conversions: 0,
-        cost: data.totalCost,
-        conversionsValue: null,
-      },
     ])
 
     handleClose()
