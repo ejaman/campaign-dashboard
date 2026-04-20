@@ -9,6 +9,7 @@ import CampaignTableMeta from './CampaignTableMeta'
 import CampaignTableContent from './CampaignTableContent'
 import type { SortState } from '@/hooks/useCampaignTable'
 import AsyncBoundary from '../shared/AsyncBoundary'
+import FilterSummary from '../filter/FilterSummary'
 
 export default function CampaignTableSection() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -43,7 +44,10 @@ export default function CampaignTableSection() {
     <section className="rounded-xl border border-border bg-white p-4 sm:p-6">
       {/* 섹션 헤더: 제목 + 검색 + 등록 버튼 */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
-        <h2 className="text-base font-semibold text-foreground">캠페인 목록</h2>
+        <div>
+          <h2 className="text-base font-semibold text-foreground">캠페인 목록</h2>
+          <FilterSummary />
+        </div>
         <div className="flex items-center gap-2">
           <SearchInput
             onSearch={handleSearch}
