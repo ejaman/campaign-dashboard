@@ -13,7 +13,7 @@ import { useCampaignRegisterModal } from '@/hooks/useCampaignRegisterModal'
 import { campaignRegisterSchema, type CampaignRegisterFormValues } from '@/lib/campaign-schema'
 import { queryKeys } from '@/lib/query-keys'
 import { PLATFORMS } from '@/constants'
-import type { Campaign, Platform } from '@/types'
+import type { Campaign, DailyStat, Platform } from '@/types'
 
 const PLATFORM_OPTIONS = PLATFORMS.map((p) => ({ value: p, label: p }))
 
@@ -26,9 +26,10 @@ export default function CampaignRegisterModal() {
     handleSubmit,
     reset,
     control,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<CampaignRegisterFormValues>({
     resolver: zodResolver(campaignRegisterSchema),
+    mode: 'onChange',
     defaultValues: {
       platform: '' as Platform,
     },
@@ -42,10 +43,12 @@ export default function CampaignRegisterModal() {
   }
 
   const onSubmit = (data: CampaignRegisterFormValues) => {
+    const campaignId = crypto.randomUUID()
+
     const newCampaign: Campaign = {
-      id: crypto.randomUUID(),
+      id: campaignId,
       name: data.name,
-      status: 'active', // 상태는 진행중으로 고정
+      status: 'active',
       platform: data.platform,
       budget: data.budget,
       startDate: data.startDate,
@@ -55,6 +58,20 @@ export default function CampaignRegisterModal() {
     queryClient.setQueryData<Campaign[]>(queryKeys.campaigns.all, (prev = []) => [
       ...prev,
       newCampaign,
+    ])
+
+    queryClient.setQueryData<DailyStat[]>(queryKeys.dailyStats.all, (prev = []) => [
+      ...prev,
+      {
+        id: crypto.randomUUID(),
+        campaignId,
+        date: data.startDate,
+        impressions: 0,
+        clicks: 0,
+        conversions: 0,
+        cost: data.totalCost,
+        conversionsValue: null,
+      },
     ])
 
     handleClose()
@@ -133,7 +150,7 @@ export default function CampaignRegisterModal() {
           <Button type="button" variant="default" size="sm" onClick={handleClose}>
             취소
           </Button>
-          <Button type="submit" variant="solid" size="sm">
+          <Button type="submit" variant="solid" size="sm" disabled={!isValid}>
             등록
           </Button>
         </Modal.Footer>
