@@ -108,6 +108,7 @@ ROAS = (conversionsValue / cost) * 100    단위: %
 - 함수 작성 시 화살표 함수를 우선으로 작성할 것
 - **에러 핸들링**: API 호출 실패 시 사용자에게 에러 상태를 명시적으로 표시할 것 (빈 화면 금지)
 - **로딩 상태**: 데이터 fetching 중에는 반드시 로딩 UI를 표시할 것
+- **주석**: 꾸밈 없이 간결하게 작성할 것. 구분선(`// ===...===`, `// ---...---`)이나 반복 기호 사용 금지. 섹션 구분이 필요하면 `// Root` 처럼 한 줄로 작성
 
 ### 2. 데이터 레이어
 
@@ -139,6 +140,16 @@ ROAS = (conversionsValue / cost) * 100    단위: %
   - 선택적 props는 기본값 명시
 - **렌더링 성능**: 차트 컴포넌트는 `React.memo`, 무거운 연산은 `useMemo`, 리스트 렌더링 시 `key`는 index 대신 고유 id 사용
 - 불필요한 `useEffect` 금지 — 파생 값은 렌더 중 계산, 이벤트 핸들러로 처리 가능한 것은 effect 쓰지 말 것
+- **모달 컴포넌트**: 컴파운드 컴포넌트 패턴 사용 (`Modal.Header` / `Modal.Content` / `Modal.Footer`)
+  - `Modal.Header`는 Context에서 `onClose`를 직접 읽어 닫기 버튼을 렌더링 — 사용하는 쪽에서 별도 전달 불필요
+  - 모달이 열릴 때 `document.body.style.overflow = 'hidden'`으로 외부 스크롤 잠금, 닫힐 때 복원
+  - `form`은 `Modal.Content` + `Modal.Footer`를 감싸도록 배치 (Header는 form 밖)
+- **폼 필드 컴포넌트**: `FormField` / `FormSelect` / `FormDateField` 사용 (`ui/`)
+  - label + input + error message를 하나의 컴포넌트로 묶어 일관성 유지
+  - label과 input은 반드시 `htmlFor` + `id`로 연결 (접근성)
+  - visible label이 있으면 `aria-label` 중복 사용 금지 — 스크린리더가 둘 다 읽음
+  - `DateInput`은 `onChange(value: string)` 시그니처라 react-hook-form과 직접 연결 불가 → `Controller`로 브릿지
+  - react-hook-form의 `defaultValues`는 `useForm({ defaultValues: {...} })`에서 설정, 컴포넌트 prop으로 넘기지 말 것
 - **UX & 접근성**
   - 모든 인터랙티브 요소에 `aria-label` 등 ARIA 속성 부여
   - 필터·폼의 선택/변경 결과는 즉시 시각적으로 피드백 (로딩 스피너, 비활성화 처리 등)

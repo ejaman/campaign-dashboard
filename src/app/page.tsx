@@ -4,6 +4,7 @@ import GlobalFilter from '@/components/filter/GlobalFilter'
 import DailyChartSection from '@/components/chart/DailyChartSection'
 import CampaignTableSection from '@/components/table/CampaignTableSection'
 import CampaignRegisterModal from '@/components/campaign/CampaignRegisterModal'
+import FilterDebug from './_debug/FilterDebug'
 
 export default function Home() {
   return (
@@ -11,7 +12,8 @@ export default function Home() {
       <GlobalFilter />
       <DailyChartSection />
       <CampaignTableSection />
-      {/* <CampaignRegisterModal /> */}
+      <CampaignRegisterModal />
+      <FilterDebug />
     </main>
   )
 }
