@@ -67,7 +67,7 @@ export const useFilterParams = () => {
       })
 
       const qs = params.toString()
-      router.push(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
     },
     [pathname, router, searchParams]
   )
